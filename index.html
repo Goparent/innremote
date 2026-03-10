@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innremote — Aprende IA con otros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yellow: #fdc416;
+  --white: #FEFEFE;
+  --black: #252525;
+  --gray: #808080;
+  --gray-light: #b0b0b0;
+  --gray-dark: #333333;
+  --bg: #1a1a1a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom cursor */
+.cursor {
+  width: 12px; height: 12px;
+  background: var(--yellow);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9999;
+  transition: transform 0.15s ease;
+  mix-blend-mode: difference;
+}
+.cursor-follower {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--yellow);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 9998;
+  transition: all 0.25s ease;
+  opacity: 0.5;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1.5rem 4rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(37,37,37,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(253,196,22,0.12);
+}
+
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--white);
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+.logo span { color: var(--yellow); }
+
+.nav-links {
+  display: flex; gap: 2.5rem; list-style: none;
+}
+.nav-links a {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-light);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--yellow); }
+
+.nav-cta {
+  background: var(--yellow);
+  color: var(--black) !important;
+  padding: 0.6rem 1.4rem;
+  border-radius: 2px;
+  font-weight: 700 !important;
+  transition: opacity 0.2s !important;
+}
+.nav-cta:hover { opacity: 0.85; color: var(--black) !important; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 8rem 4rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background: 
+    radial-gradient(ellipse 60% 50% at 70% 50%, rgba(253,196,22,0.07) 0%, transparent 70%),
+    repeating-linear-gradient(90deg, rgba(253,196,22,0.03) 0px, transparent 1px, transparent 80px, rgba(253,196,22,0.03) 81px),
+    repeating-linear-gradient(0deg, rgba(253,196,22,0.03) 0px, transparent 1px, transparent 80px, rgba(253,196,22,0.03) 81px);
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 700px; }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: rgba(253,196,22,0.12);
+  border: 1px solid rgba(253,196,22,0.3);
+  color: var(--yellow);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+  border-radius: 2px;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.8s ease both;
+}
+.hero-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--yellow);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--yellow);
+  position: relative;
+  display: inline-block;
+}
+h1 em::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 0; right: 0;
+  height: 3px;
+  background: var(--yellow);
+  opacity: 0.4;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: lineIn 0.6s 1s ease forwards;
+}
+@keyframes lineIn { to { transform: scaleX(1); } }
+
+.hero-sub {
+  font-size: 1.2rem;
+  color: var(--gray-light);
+  line-height: 1.7;
+  max-width: 520px;
+  margin-bottom: 3rem;
+  font-weight: 300;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-actions {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+.btn-primary {
+  background: var(--yellow);
+  color: var(--black);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 1rem 2.2rem;
+  border: none;
+  border-radius: 2px;
+  cursor: none;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s, box-shadow 0.2s;
+  letter-spacing: -0.02em;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(253,196,22,0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 1rem 2.2rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 2px;
+  cursor: none;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-secondary:hover { border-color: var(--yellow); color: var(--yellow); }
+
+.hero-stats {
+  position: absolute;
+  right: 4rem; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 2rem;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+
+.stat {
+  text-align: right;
+  border-right: 2px solid var(--yellow);
+  padding-right: 1.5rem;
+}
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: var(--yellow);
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.2rem;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SECTION BASE */
+section { padding: 6rem 4rem; }
+
+.section-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+}
+
+.section-sub {
+  font-size: 1.05rem;
+  color: var(--gray-light);
+  max-width: 540px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(253,196,22,0.3), transparent);
+  margin: 0 4rem;
+}
+
+/* QUÉ ES */
+.what-section {
+  background: var(--bg);
+}
+
+.what-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-top: 4rem;
+}
+
+.what-pillars {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.pillar {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-left: 3px solid var(--yellow);
+  padding: 1.5rem 2rem;
+  border-radius: 0 4px 4px 0;
+  transition: background 0.2s;
+}
+.pillar:hover { background: rgba(253,196,22,0.05); }
+
+.pillar-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+  color: var(--white);
+}
+.pillar p { font-size: 0.9rem; color: var(--gray-light); line-height: 1.6; }
+
+.what-visual {
+  position: relative;
+  height: 420px;
+}
+
+.visual-box {
+  position: absolute;
+  border-radius: 4px;
+}
+
+.vb1 {
+  inset: 0;
+  background: rgba(253,196,22,0.04);
+  border: 1px solid rgba(253,196,22,0.15);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.vb-inner {
+  font-family: 'Syne', sans-serif;
+  font-size: 5rem;
+  font-weight: 800;
+  color: rgba(253,196,22,0.08);
+  letter-spacing: -0.05em;
+  text-align: center;
+  line-height: 1;
+  user-select: none;
+}
+
+.floating-badge {
+  position: absolute;
+  background: var(--yellow);
+  color: var(--black);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0.6rem 1rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.fb1 { bottom: 2rem; left: -1rem; animation: float 4s ease-in-out infinite; }
+.fb2 { top: 2rem; right: -1rem; animation: float 4s 1.3s ease-in-out infinite; }
+.fb3 { top: 50%; left: -1rem; transform: translateY(-50%); animation: float 4s 2s ease-in-out infinite; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.fb3 { animation: float3 4s 2s ease-in-out infinite; }
+@keyframes float3 {
+  0%, 100% { transform: translateY(-50%); }
+  50% { transform: translateY(calc(-50% - 8px)); }
+}
+
+/* CURSOS */
+.courses-section { background: var(--black); }
+
+.courses-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem;
+}
+
+.course-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.course-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(253,196,22,0.3);
+}
+.course-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--yellow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.course-card:hover::before { transform: scaleX(1); }
+
+.course-main {
+  background: rgba(253,196,22,0.06);
+  border-color: rgba(253,196,22,0.25);
+}
+.course-main::before { transform: scaleX(1); }
+
+.course-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--yellow);
+  color: var(--black);
+  padding: 0.3rem 0.8rem;
+  border-radius: 2px;
+  margin-bottom: 1.2rem;
+}
+
+.course-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.course-desc {
+  font-size: 0.9rem;
+  color: var(--gray-light);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.course-topics {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.topic-tag {
+  font-size: 0.72rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--gray-light);
+  padding: 0.3rem 0.7rem;
+  border-radius: 2px;
+}
+
+.course-price {
+  display: flex; align-items: baseline; gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.price-main {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2.2rem;
+  color: var(--yellow);
+  letter-spacing: -0.04em;
+}
+.price-label { font-size: 0.85rem; color: var(--gray); }
+
+.course-includes {
+  list-style: none;
+  margin-bottom: 1.5rem;
+}
+.course-includes li {
+  font-size: 0.85rem;
+  color: var(--gray-light);
+  padding: 0.3rem 0;
+  padding-left: 1.2rem;
+  position: relative;
+}
+.course-includes li::before {
+  content: '→';
+  position: absolute; left: 0;
+  color: var(--yellow);
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* CALENDARIO */
+.schedule-section { background: var(--bg); }
+
+.cities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.city-card {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.city-card:hover { border-color: rgba(253,196,22,0.3); }
+
+.city-header {
+  background: rgba(253,196,22,0.08);
+  border-bottom: 1px solid rgba(253,196,22,0.15);
+  padding: 1.2rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.city-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.city-status {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+}
+.status-open { background: rgba(253,196,22,0.2); color: var(--yellow); }
+.status-tbc { background: rgba(128,128,128,0.2); color: var(--gray); }
+
+.city-body { padding: 1.2rem 1.5rem; }
+
+.city-meta {
+  font-size: 0.78rem;
+  color: var(--gray);
+  margin-bottom: 0.8rem;
+  display: flex; gap: 1rem;
+}
+
+.city-dates {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+}
+.date-chip {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--gray-light);
+  padding: 0.25rem 0.6rem;
+  border-radius: 2px;
+}
+
+/* COMUNIDAD / PRECIOS */
+.pricing-section { background: var(--black); }
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.plan-card {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 2rem;
+  position: relative;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.plan-card:hover { transform: translateY(-4px); border-color: rgba(253,196,22,0.3); }
+
+.plan-featured {
+  border-color: var(--yellow);
+  background: rgba(253,196,22,0.04);
+}
+.plan-featured::after {
+  content: 'POPULAR';
+  position: absolute;
+  top: -1px; right: 1.5rem;
+  background: var(--yellow);
+  color: var(--black);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 0.25rem 0.7rem;
+  border-radius: 0 0 3px 3px;
+}
+
+.plan-tier {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 0.5rem;
+}
+
+.plan-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.2rem;
+}
+
+.plan-price-block { margin-bottom: 1.5rem; }
+.plan-price {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2.4rem;
+  color: var(--white);
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+.plan-price span { font-size: 1.2rem; font-weight: 400; color: var(--gray); }
+.plan-note { font-size: 0.78rem; color: var(--gray); margin-top: 0.3rem; }
+
+.plan-features { list-style: none; }
+.plan-features li {
+  font-size: 0.85rem;
+  color: var(--gray-light);
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.plan-features li:last-child { border-bottom: none; }
+.plan-features li::before { content: '✦'; color: var(--yellow); font-size: 0.6rem; flex-shrink: 0; }
+
+/* MENTORES */
+.mentors-section { background: var(--bg); }
+
+.mentors-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.mentor-card {
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 1.8rem 1.5rem;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.mentor-card:hover { border-color: rgba(253,196,22,0.3); transform: translateY(-3px); }
+.mentor-card::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--yellow);
+  transform: scaleX(0); transform-origin: center;
+  transition: transform 0.3s;
+}
+.mentor-card:hover::before { transform: scaleX(1); }
+
+.mentor-avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: rgba(253,196,22,0.1);
+  border: 2px solid rgba(253,196,22,0.3);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--yellow);
+}
+
+.mentor-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.mentor-role {
+  font-size: 0.75rem;
+  color: var(--yellow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* MENTORIA */
+.mentoria-section { background: var(--black); }
+
+.mentoria-box {
+  background: rgba(253,196,22,0.05);
+  border: 1px solid rgba(253,196,22,0.2);
+  border-radius: 4px;
+  padding: 3rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.mentoria-price {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 4rem;
+  color: var(--yellow);
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+.mentoria-price span { font-size: 1.5rem; color: var(--gray); font-weight: 400; }
+
+/* FAQ / CTA */
+.cta-section {
+  background: var(--yellow);
+  padding: 6rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: 'INNREMOTE';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 15vw;
+  color: rgba(37,37,37,0.05);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: -0.05em;
+}
+
+.cta-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  color: var(--black);
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.cta-sub { font-size: 1.1rem; color: rgba(37,37,37,0.7); margin-bottom: 2.5rem; position: relative; }
+
+.btn-dark {
+  background: var(--black);
+  color: var(--yellow);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 1rem 2.5rem;
+  border: none; border-radius: 2px;
+  cursor: none; text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.btn-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(37,37,37,0.3);
+}
+
+/* FOOTER */
+footer {
+  background: #111;
+  padding: 3rem 4rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--white);
+  text-decoration: none;
+}
+.footer-logo span { color: var(--yellow); }
+
+.footer-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
+.footer-links a {
+  font-size: 0.82rem;
+  color: var(--gray);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--yellow); }
+
+.footer-copy { font-size: 0.8rem; color: var(--gray); }
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  .mentors-grid { grid-template-columns: repeat(2, 1fr); }
+  .courses-grid { grid-template-columns: 1fr 1fr; }
+  .hero-stats { display: none; }
+}
+
+@media (max-width: 768px) {
+  nav { padding: 1.2rem 1.5rem; }
+  .nav-links { display: none; }
+  section { padding: 4rem 1.5rem; }
+  .hero { padding: 7rem 1.5rem 4rem; }
+  .what-grid { grid-template-columns: 1fr; }
+  .what-visual { display: none; }
+  .courses-grid { grid-template-columns: 1fr; }
+  .cities-grid { grid-template-columns: 1fr 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .mentors-grid { grid-template-columns: repeat(2, 1fr); }
+  .mentoria-box { grid-template-columns: 1fr; padding: 2rem; }
+  footer { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+  .divider { margin: 0 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .cities-grid { grid-template-columns: 1fr; }
+  .mentors-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="follower"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Inn<span>remote</span></a>
+  <ul class="nav-links">
+    <li><a href="#cursos">Cursos</a></li>
+    <li><a href="#calendario">Calendario</a></li>
+    <li><a href="#comunidad">Comunidad</a></li>
+    <li><a href="#mentores">Mentores</a></li>
+    <li><a href="#contacto" class="nav-cta">Inscríbete</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Comunidad de aprendizaje IA</div>
+    <h1>Aprende IA <em>con otros</em>,<br>aplícala hoy.</h1>
+    <p class="hero-sub">Cursos en directo, comunidad activa y mentorías personalizadas para que domines la inteligencia artificial sin teoría vacía.</p>
+    <div class="hero-actions">
+      <a href="#cursos" class="btn-primary">Ver cursos</a>
+      <a href="#comunidad" class="btn-secondary">Explorar comunidad</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">20h</div>
+      <div class="stat-label">Curso base</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Mentores</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Ciudades</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- QUÉ ES -->
+<section class="what-section" id="que-es">
+  <div class="section-tag">Qué es Innremote</div>
+  <div class="what-grid">
+    <div>
+      <h2 class="section-title">Una comunidad donde se aprende <em style="color:var(--yellow)">haciendo</em></h2>
+      <p class="section-sub">No vendemos cursos grabados que nadie termina. Construimos un espacio donde pymes, profesionales y curiosos aprenden IA entre sí, con facilitadores que guían el proceso.</p>
+      <div class="what-pillars" style="margin-top:2.5rem">
+        <div class="pillar reveal">
+          <div class="pillar-title">Cursos en directo</div>
+          <p>Sesiones presenciales intensivas de 20 horas en distintas ciudades. Aprende con personas reales, no con pantallas.</p>
+        </div>
+        <div class="pillar reveal">
+          <div class="pillar-title">Plataforma de comunidad</div>
+          <p>Repositorio de recursos, videos gratuitos, canal de WhatsApp, masterminds mensuales y clase semanal de 1 hora.</p>
+        </div>
+        <div class="pillar reveal">
+          <div class="pillar-title">Mentorías personalizadas</div>
+          <p>Sesiones 1:1 con mentores expertos para resolver tus retos concretos de IA y transformación digital.</p>
+        </div>
+      </div>
+    </div>
+    <div class="what-visual reveal">
+      <div class="visual-box vb1">
+        <div class="vb-inner">IA<br>×<br>Tú</div>
+      </div>
+      <div class="floating-badge fb1">📚 Repositorio IA</div>
+      <div class="floating-badge fb2">🧠 Mastermind mensual</div>
+      <div class="floating-badge fb3">⚡ Clase semanal</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CURSOS -->
+<section class="courses-section" id="cursos">
+  <div class="courses-header">
+    <div>
+      <div class="section-tag">Formación</div>
+      <h2 class="section-title">El curso que abre<br>todas las puertas</h2>
+    </div>
+    <p style="color:var(--gray-light);max-width:320px;font-size:0.9rem;line-height:1.6;font-weight:300">20 horas que te dan la base para entrar en nuestra comunidad y seguir aprendiendo con contexto real.</p>
+  </div>
+  <div class="courses-grid reveal">
+    <div class="course-card course-main">
+      <div class="course-badge">⭐ Curso completo</div>
+      <div class="course-name">Iniciación a la IA</div>
+      <div class="course-desc">De cero a productivo con IA en 20 horas. Historia, herramientas, datos, agentes y código sin saber programar.</div>
+      <div class="course-topics">
+        <span class="topic-tag">Historia de la IA</span>
+        <span class="topic-tag">Prompting eficiente</span>
+        <span class="topic-tag">Imágenes</span>
+        <span class="topic-tag">Audio & Video</span>
+        <span class="topic-tag">Avatares generativos</span>
+        <span class="topic-tag">Manejo del dato</span>
+        <span class="topic-tag">Agentes (n8n)</span>
+        <span class="topic-tag">Clawbot</span>
+        <span class="topic-tag">Vibecoding</span>
+      </div>
+      <div class="course-price">
+        <div class="price-main">700€</div>
+        <div class="price-label">+ IVA</div>
+      </div>
+      <ul class="course-includes">
+        <li>20 horas de formación presencial</li>
+        <li>Acceso comunidad Oro incluido</li>
+        <li>2 mentorías gratuitas (valor 300€)</li>
+        <li>1 año de acceso a la plataforma</li>
+      </ul>
+      <a href="#contacto" class="btn-primary" style="width:100%;text-align:center;display:block;">Reservar plaza</a>
+    </div>
+    <div class="course-card reveal">
+      <div class="course-badge" style="background:rgba(253,196,22,0.15);color:var(--yellow)">Consultoría</div>
+      <div class="course-name">IA para Pymes</div>
+      <div class="course-desc">Acompañamiento personalizado para integrar IA en los procesos de tu empresa. Diagnóstico, formación y seguimiento.</div>
+      <div class="course-topics">
+        <span class="topic-tag">Diagnóstico IA</span>
+        <span class="topic-tag">Automatización</span>
+        <span class="topic-tag">Procesos internos</span>
+        <span class="topic-tag">ROI medible</span>
+      </div>
+      <div class="course-price">
+        <div class="price-main" style="color:var(--white)">A medida</div>
+      </div>
+      <ul class="course-includes">
+        <li>Consultoría de diagnóstico inicial</li>
+        <li>Plan de implementación IA</li>
+        <li>Formación para el equipo</li>
+        <li>Seguimiento y soporte</li>
+      </ul>
+      <a href="#contacto" class="btn-secondary" style="width:100%;text-align:center;display:block;">Contactar</a>
+    </div>
+    <div class="course-card reveal">
+      <div class="course-badge" style="background:rgba(253,196,22,0.15);color:var(--yellow)">Mentoría</div>
+      <div class="course-name">Sesión Individual</div>
+      <div class="course-desc">1 hora con un mentor experto para resolver tus retos concretos de IA. Sin rodeos, sin teoría.</div>
+      <div class="course-topics">
+        <span class="topic-tag">1:1 personalizado</span>
+        <span class="topic-tag">Caso real</span>
+        <span class="topic-tag">Accionable</span>
+      </div>
+      <div class="course-price">
+        <div class="price-main">150€</div>
+        <div class="price-label">/ hora</div>
+      </div>
+      <ul class="course-includes">
+        <li>1 hora con mentor senior</li>
+        <li>Casos prácticos reales</li>
+        <li>Plan de acción post-sesión</li>
+        <li>Sin compromisos adicionales</li>
+      </ul>
+      <a href="#contacto" class="btn-secondary" style="width:100%;text-align:center;display:block;">Reservar mentoría</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CALENDARIO -->
+<section class="schedule-section" id="calendario">
+  <div class="section-tag">Próximas fechas</div>
+  <h2 class="section-title">Encuentra tu ciudad</h2>
+  <p class="section-sub">Cursos presenciales en 6 ciudades. Formato intensivo de fin de semana o sesiones semanales según la ubicación.</p>
+
+  <div class="cities-grid reveal">
+    <div class="city-card">
+      <div class="city-header">
+        <div class="city-name">🌊 Fuerteventura</div>
+        <span class="city-status status-open">Abierto</span>
+      </div>
+      <div class="city-body">
+        <div class="city-meta">
+          <span>3h / sesión</span>
+          <span>Abril – Mayo</span>
+        </div>
+        <div class="city-dates">
+          <span class="date-chip">Abr 13</span>
+          <span class="date-chip">Abr 15</span>
+          <span class="date-chip">Abr 20</span>
+          <span class="date-chip">Abr 22</span>
+          <span class="date-chip">Abr 27</span>
+          <span class="date-chip">Abr 29</span>
+          <span class="date-chip">May 4</span>
+          <span class="date-chip">May 6</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="city-card">
+      <div class="city-header">
+        <div class="city-name">🌴 Gran Canaria</div>
+        <span class="city-status status-open">Abierto</span>
+      </div>
+      <div class="city-body">
+        <div class="city-meta">
+          <span>5h / sesión</span>
+          <span>Mayo</span>
+        </div>
+        <div class="city-dates">
+          <span class="date-chip">May 10</span>
+          <span class="date-chip">May 11</span>
+          <span class="date-chip">May 17</span>
+          <span class="date-chip">May 18</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="city-card">
+      <div class="city-header">
+        <div class="city-name">🏔️ Tenerife</div>
+        <span class="city-status status-open">Abierto</span>
+      </div>
+      <div class="city-body">
+        <div class="city-meta">
+          <span>5h / sesión</span>
+          <span>Mayo</span>
+        </div>
+        <div class="city-dates">
+          <span class="date-chip">May 15</span>
+          <span class="date-chip">May 16</span>
+          <span class="date-chip">May 22</span>
+          <span class="date-chip">May 23</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="city-card">
+      <div class="city-header">
+        <div class="city-name">🏛️ Barcelona</div>
+        <span class="city-status status-open">Abierto</span>
+      </div>
+      <div class="city-body">
+        <div class="city-meta">
+          <span>Intensivo</span>
+          <span>Junio</span>
+        </div>
+        <div class="city-dates">
+          <span class="date-chip">Jun 5</span>
+          <span class="date-chip">Jun 6</span>
+          <span class="date-chip">Jun 12</span>
+          <span class="date-chip">Jun 13</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="city-card">
+      <div class="city-header">
+        <div class="city-name">🏙️ Madrid</div>
+        <span class="city-status status-open">Abierto</span>
+      </div>
+      <div class="city-body">
+        <div class="city-meta">
+          <span>Intensivo</span>
+          <span>Junio</span>
+        </div>
+        <div class="city-dates">
+          <span class="date-chip">Jun 19</span>
+          <span class="date-chip">Jun 20</span>
+          <span class="date-chip">Jun 26</span>
+          <span class="date-chip">Jun 27</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="city-card" style="opacity:0.6">
+      <div class="city-header">
+        <div class="city-name">🌋 Lanzarote</div>
+        <span class="city-status status-tbc">Por confirmar</span>
+      </div>
+      <div class="city-body">
+        <div class="city-meta"><span>Próximamente</span></div>
+        <div class="city-dates">
+          <span class="date-chip">TBC</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cities-grid reveal" style="margin-top:1.5rem">
+    <div class="city-card" style="opacity:0.6">
+      <div class="city-header">
+        <div class="city-name">🇩🇪 Berlín</div>
+        <span class="city-status status-tbc">Por confirmar</span>
+      </div>
+      <div class="city-body">
+        <div class="city-meta"><span>Próximamente</span></div>
+        <div class="city-dates">
+          <span class="date-chip">TBC</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMUNIDAD -->
+<section class="pricing-section" id="comunidad">
+  <div class="section-tag">Comunidad de aprendizaje</div>
+  <h2 class="section-title">Elige tu nivel de<br><em style="color:var(--yellow)">compromiso</em></h2>
+  <p class="section-sub">Desde acceso básico a la comunidad hasta acompañamiento continuo con mentores. Tú eliges el ritmo.</p>
+
+  <div class="pricing-grid reveal">
+    <div class="plan-card">
+      <div class="plan-tier">Comunidad</div>
+      <div class="plan-name">Plata</div>
+      <div class="plan-price-block">
+        <div class="plan-price">50€ <span>/mes</span></div>
+        <div class="plan-note">o 25€/mes pagando el año completo</div>
+      </div>
+      <ul class="plan-features">
+        <li>Canal de WhatsApp comunidad</li>
+        <li>Acceso al repositorio de recursos</li>
+        <li>Mastermind mensual</li>
+        <li>Clase en directo 1h/semana</li>
+      </ul>
+      <a href="#contacto" class="btn-secondary" style="width:100%;text-align:center;display:block;margin-top:1.5rem">Unirme</a>
+    </div>
+
+    <div class="plan-card plan-featured">
+      <div class="plan-tier">Comunidad</div>
+      <div class="plan-name">Oro</div>
+      <div class="plan-price-block">
+        <div class="plan-price">50€ <span>/mes</span></div>
+        <div class="plan-note">Compromiso mínimo 1 año</div>
+      </div>
+      <ul class="plan-features">
+        <li>Todo lo de Plata</li>
+        <li>2 mentorías incluidas al año</li>
+        <li>Acceso prioritario a eventos</li>
+        <li>Red de contactos exclusiva</li>
+      </ul>
+      <a href="#contacto" class="btn-primary" style="width:100%;text-align:center;display:block;margin-top:1.5rem">Unirme</a>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-tier">Comunidad</div>
+      <div class="plan-name">Platino</div>
+      <div class="plan-price-block">
+        <div class="plan-price">100€ <span>/mes</span></div>
+        <div class="plan-note">La experiencia completa</div>
+      </div>
+      <ul class="plan-features">
+        <li>Todo lo de Oro</li>
+        <li>1 mentoría incluida cada mes</li>
+        <li>Acceso a sesiones avanzadas</li>
+        <li>Soporte directo con mentores</li>
+      </ul>
+      <a href="#contacto" class="btn-secondary" style="width:100%;text-align:center;display:block;margin-top:1.5rem">Unirme</a>
+    </div>
+
+    <div class="plan-card" style="border-color:rgba(253,196,22,0.15);background:rgba(253,196,22,0.02)">
+      <div class="plan-tier">Paquete completo</div>
+      <div class="plan-name">Curso + Oro</div>
+      <div class="plan-price-block">
+        <div class="plan-price">700€ <span>único</span></div>
+        <div class="plan-note">Curso 20h + 1 año comunidad Oro</div>
+      </div>
+      <ul class="plan-features">
+        <li>Curso presencial 20 horas</li>
+        <li>Comunidad Oro 1 año incluida</li>
+        <li>2 mentorías gratis (val. 300€)</li>
+        <li>El mejor punto de entrada</li>
+      </ul>
+      <a href="#contacto" class="btn-primary" style="width:100%;text-align:center;display:block;margin-top:1.5rem;background:rgba(253,196,22,0.9)">La mejor opción</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MENTORES -->
+<section class="mentors-section" id="mentores">
+  <div class="section-tag">El equipo</div>
+  <h2 class="section-title">Aprendes con quienes<br>ya lo aplican</h2>
+  <p class="section-sub">Facilitadores y mentores que usan IA en su trabajo diario. No teóricos, sino practicantes que comparten lo que funciona de verdad.</p>
+
+  <div class="mentors-grid reveal">
+    <div class="mentor-card">
+      <div class="mentor-avatar">D</div>
+      <div class="mentor-name">Diego</div>
+      <div class="mentor-role">Facilitador</div>
+    </div>
+    <div class="mentor-card">
+      <div class="mentor-avatar">A</div>
+      <div class="mentor-name">Alex</div>
+      <div class="mentor-role">Facilitador</div>
+    </div>
+    <div class="mentor-card">
+      <div class="mentor-avatar">Á</div>
+      <div class="mentor-name">Angel</div>
+      <div class="mentor-role">Facilitador</div>
+    </div>
+    <div class="mentor-card">
+      <div class="mentor-avatar">L</div>
+      <div class="mentor-name">Laura</div>
+      <div class="mentor-role">Facilitadora</div>
+    </div>
+    <div class="mentor-card">
+      <div class="mentor-avatar">MG</div>
+      <div class="mentor-name">Mario García</div>
+      <div class="mentor-role">Mentor</div>
+    </div>
+    <div class="mentor-card">
+      <div class="mentor-avatar">AG</div>
+      <div class="mentor-name">Alejandro Guerrero</div>
+      <div class="mentor-role">Mentor</div>
+    </div>
+    <div class="mentor-card">
+      <div class="mentor-avatar">SS</div>
+      <div class="mentor-name">Sergio Sánchez</div>
+      <div class="mentor-role">Mentor</div>
+    </div>
+    <div class="mentor-card" style="border-style:dashed;opacity:0.5">
+      <div class="mentor-avatar" style="background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.1);color:var(--gray)">?</div>
+      <div class="mentor-name" style="color:var(--gray)">Próximamente</div>
+      <div class="mentor-role" style="color:var(--gray)">Creciendo</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MENTORÍA DESTACADA -->
+<section class="mentoria-section">
+  <div class="section-tag">Mentorías individuales</div>
+  <div class="mentoria-box reveal">
+    <div>
+      <h2 class="section-title" style="margin-bottom:1rem">Una hora que<br>cambia el enfoque</h2>
+      <p style="color:var(--gray-light);line-height:1.7;max-width:500px;font-weight:300">Sesión 1:1 con un mentor experto para resolver tus retos concretos. Trae tu caso real y sal con un plan accionable. Sin relleno, sin teoría genérica.</p>
+      <ul class="course-includes" style="margin-top:1.5rem">
+        <li>Diagnóstico de tu situación actual</li>
+        <li>Recomendaciones específicas para tu caso</li>
+        <li>Herramientas y recursos concretos</li>
+        <li>Plan de implementación post-sesión</li>
+      </ul>
+      <a href="#contacto" class="btn-primary" style="margin-top:1.5rem;display:inline-block">Reservar mentoría</a>
+    </div>
+    <div style="text-align:center">
+      <div class="mentoria-price">150€<br><span>/ hora</span></div>
+      <p style="color:var(--gray);font-size:0.8rem;margin-top:0.5rem">Incluida en planes Oro y Platino</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section" id="contacto">
+  <h2 class="cta-title">¿Listo para empezar?</h2>
+  <p class="cta-sub">Únete a la comunidad que aprende IA haciendo, no viendo. El próximo curso arranca pronto.</p>
+  <a href="mailto:hola@innremote.com" class="btn-dark">Escríbenos hola@innremote.com</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Inn<span>remote</span></a>
+  <ul class="footer-links">
+    <li><a href="#que-es">Qué es</a></li>
+    <li><a href="#cursos">Cursos</a></li>
+    <li><a href="#calendario">Calendario</a></li>
+    <li><a href="#comunidad">Comunidad</a></li>
+    <li><a href="#mentores">Mentores</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 Innremote. Comunidad de aprendizaje IA.</p>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('follower');
+let mx = 0, my = 0, fx = 0, fy = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 6 + 'px';
+  cursor.style.top = my - 6 + 'px';
+});
+
+function animFollower() {
+  fx += (mx - fx) * 0.12;
+  fy += (my - fy) *.12;
+  follower.style.left = fx - 18 + 'px';
+  follower.style.top = fy - 18 + 'px';
+  requestAnimationFrame(animFollower);
+}
+animFollower();
+
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'scale(2)';
+    follower.style.transform = 'scale(1.5)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'scale(1)';
+    follower.style.transform = 'scale(1)';
+  });
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, entry.target.dataset.delay || 0);
+    }
+  });
+}, { threshold: 0.1 });
+
+reveals.forEach((el, i) => {
+  el.dataset.delay = (i % 4) * 80;
+  observer.observe(el);
+});
+
+// Smooth nav
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href === '#') return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
